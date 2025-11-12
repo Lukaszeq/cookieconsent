@@ -32,6 +32,7 @@ describe("Cookie should be created successfully", () => {
         expect(typeof ccCookie.consentId).toBe('string');
         expect(ccCookie.consentTimestamp).toBeDefined();
         expect(ccCookie.lastConsentTimestamp).toBeDefined();
+        expect(ccCookie.languageCode).toEqual('en');
         expect(ccCookie.categories).toEqual(['necessary', 'analytics', 'ads']);
         expect(ccCookie.services).toMatchObject({
             necessary: ['service1'],
@@ -40,11 +41,16 @@ describe("Cookie should be created successfully", () => {
         });
     });
 
-    it('Should erase cookie', () => {
-        setCookie('test_cookie', '{"ciao": 21}');
-        eraseCookiesHelper(['test_cookie'], '/', [location.host]);
-        const ccCookie = getSingleCookie('test_cookie');
-        expect(ccCookie).toBeFalsy();
+    it('Should erase cookies', () => {
+        const name1 = 'test_cookie1';
+        const name2 = 'test_cookie2';
+        setCookie(name1, '{"ciao": 11}');
+        setCookie(name2, '{"aloha": 22}');
+        expect(getSingleCookie(name1)).toBeTruthy();
+        expect(getSingleCookie(name2)).toBeTruthy();
+        eraseCookiesHelper([name1, name2]);
+        expect(getSingleCookie(name1)).toBeFalsy();
+        expect(getSingleCookie(name2)).toBeFalsy();
     });
 
     it('Should set the cookie', () => {
